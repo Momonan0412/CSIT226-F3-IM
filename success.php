@@ -53,7 +53,37 @@
 </head>
 <body>
     <div class="container">
-        <p>You have successfully logged in.</p>
+        <p><?php echo $_SESSION["ExistingUserName"]?> have successfully logged in.</p>
+
+        <div>
+        <h1>Registered Customers</h1>
+        <?php
+        $sql = "SELECT firstname, lastname, gender FROM tbluserprofile";
+        $result = $mysqli->query($sql);
+        if ($result) {
+            if ($result->num_rows > 0) {
+                // Output data of each row
+                echo "<table style='border-collapse: collapse;'>";
+                echo "<tr>";
+                echo "<th style='border: 1px solid black;'>Name</th>";
+                echo "<th style='border: 1px solid black;'>Gender</th>";
+                echo "</tr>";
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td style='border: 1px solid black;'>" . $row["firstname"] . " " . $row["lastname"] . "</td>";
+                    echo "<td style='border: 1px solid black;'>" .  $row["gender"] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+            } else {
+                echo "0 results";
+            }
+        } else {
+            echo "Error: " . $conn->error;
+        }
+        $mysqli->close();
+        ?>
+    </div>
     </div>
 </body>
 </html>

@@ -4,7 +4,7 @@ session_start();
 $user = "root";
 $password = "";
 $host = "localhost";
-$port = 3307;
+$port = 3306;
 $dbname = "dbchuaf3";
     
 $mysqli = new mysqli($host, $user, $password, $dbname, $port);
