@@ -1,5 +1,6 @@
 <?php    
     include 'connect.php';
+    include 'header.php';
     function displaySweetAlert($icon, $title, $message) {
         echo "<script>
                 console.log('SweetAlert function called');
@@ -25,7 +26,6 @@
         <title>BookNStay | Register Page</title> 
         <link rel="stylesheet" href="css/register.css">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
         function togglePasswordVisibility(inputId) {
             var inputField = document.getElementById(inputId);
@@ -38,26 +38,26 @@
     </script>
     </head> 
     <body>
-        <div class="wrapper">
+        <div class="container">
             <form method="post">
                 <h1>REGISTER</h1>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="text" name="firstname" placeholder="First name">
                     <i class='bx bxs-user' ></i>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="text" name="lastname" placeholder="Last name">
                     <i class='bx bxs-user' ></i>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="text" name="username" placeholder="Username">
                     <i class='bx bxs-user' ></i>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="text" name="email" placeholder="Email">
                     <i class='bx bxs-user' ></i>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <label>GENDER: </label>
                     <select name="gender">
                         <option value=""></option>
@@ -65,17 +65,17 @@
                         <option value="Female">Female</option>
                     </select>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="password" id="password" name="password" placeholder="Password">
                     <i class='bx bxs-lock' ></i>
                     <button type="button" onclick="togglePasswordVisibility('password')">Show</button>
                 </div>
-                <div class="input-box">
+                <div class="form-group">
                     <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Confirm password"> 
                     <i class='bx bxs-lock'></i>
                     <button type="button" onclick="togglePasswordVisibility('confirmpassword')">Show</button>
                 </div>
-                <button type="submit" name="submit" class="btn">Register</button>
+                <button type="submit" name="submit" >Register</button>
                 <div class="login-link">
                 <p>Already have an account? <a href="login.php">Login</a></p> 
                 </div>
@@ -127,17 +127,22 @@
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("sss", $email, $uname, $hashedPassword);
             $stmt->execute();
+
+            //GET THE tbluseraccount's PRIMARY KEY HERE
+            $newlyRegisteredAccountID = $mysqli->insert_id; /// MAKA WEETT!! THE BEST!
+
             $stmt->close();
+            
                     // Save data to tbluserprofile
-            $sql1 = "INSERT INTO tbluserprofile (firstname, lastname, gender) VALUES (?, ?, ?)";
+            $sql1 = "INSERT INTO tbluserprofile (acctid, firstname, lastname, gender) VALUES (?, ?, ?, ?)";
 
             $stmt1 = $mysqli->prepare($sql1);
-            $stmt1->bind_param("sss", $fname, $lname, $gender);
+            $stmt1->bind_param("isss", $newlyRegisteredAccountID, $fname, $lname, $gender);
             $stmt1->execute();
             $stmt1->close();
             displaySweetAlert("success", "You have registered successfully!.", "Click OK to login!");
         } else {
-            displaySweetAlert("Error", "Username Already Exist", "Please use another username!");
+            displaySweetAlert("error", "Username Already Exist", "Please use another username!");
             return;
         }
 	}

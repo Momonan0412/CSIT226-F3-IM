@@ -1,5 +1,6 @@
 <?php
     include 'connect.php';
+    include 'header.php';
     function displaySweetAlert1($icon, $title, $message) {
         echo "<script>
                 console.log('$title');
@@ -10,7 +11,7 @@
                 }).then((result) => {
                     if ('$title' === 'Login Successful!') {
                         console.log('Redirecting to login page');
-                        window.location.href = 'success.php';
+                        window.location.href = 'book.php';
                     }
                 });
             </script>";
@@ -24,23 +25,24 @@
         <title>BookNStay | Register Page</title> 
         <link rel="stylesheet" href="css/register.css">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     </head> 
     <body>
-        <div class="wrapper">
-            <form method="post">
+        <div class="container">
+            <form method="post" >
+                <div  class="dropdown-container">
                 <h1>Login</h1>
-                <div class="input-box">
-                    <input type="text" name="username" placeholder="Username">
-                    <i class='bx bxs-user' ></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" name="password" placeholder="Password">
-                    <i class='bx bxs-lock' ></i>
-                </div>
-                <button type="submit" name="submit" class="btn">Login</button>
-                <div class="login-link">
-                   <p>Don't have an account? <a href="register.php">Register</a></p> 
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Username">
+                        <i class='bx bxs-user' ></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password">
+                        <i class='bx bxs-lock' ></i>
+                    </div>
+                    <button type="submit" name="submit">Login</button>
+                    <div class="login-link">
+                    <p>Don't have an account? <a href="register.php">Register</a></p> 
+                    </div>
                 </div>
             </form>
         </div>
@@ -55,8 +57,6 @@ if(isset($_POST['submit'])){
         // echo $uname . " " . $pword;
 
         // TO ENSURE THAT NOBODY CAN ACCESS THE SUCCESS.PHP
-        $_SESSION["ExistingUserName"] = $uname;
-        $_SESSION["ExistingUserPass"] = $pword;
         
         // Prepare and execute SQL statement
         $sql = "SELECT * FROM tbluseraccount WHERE username = ?";
@@ -86,6 +86,15 @@ if(isset($_POST['submit'])){
 
             try {
                 if(password_verify($pword, $hashedPasswordFromDB)){
+                    
+                    // Assign session variables
+                    $_SESSION["ExistingUserAccountID"] = $row['acctid'];
+                    $_SESSION["ExistingUserAccountUsername"] = $row['username'];
+
+                    // Set cookies
+                    setcookie('user_id', $_SESSION["ExistingUserAccountID"], time() + 3600, '/');
+                    setcookie('username', $_SESSION["ExistingUserAccountUsername"], time() + 3600, '/');
+
                     echo "<script>
                     console.log('inside password_verify');
                     </script>";
@@ -98,7 +107,7 @@ if(isset($_POST['submit'])){
             } catch (Exception $e) {
                 throw new Exception("Error verifying password: " . $e->getMessage());
             }
-        } else{
+        } else {
             displaySweetAlert1("warning", "Input Error", "Type Og Tarung Chuy!");
         }
     } catch (Exception $e) {

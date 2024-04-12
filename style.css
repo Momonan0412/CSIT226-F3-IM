@@ -1,0 +1,130 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.container {
+    max-width: 800px;
+    margin: 0px auto;
+    margin-bottom: 200px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+h1 {
+    text-align: center;
+    color: #333;
+}
+p {
+    text-align: center;
+    color: #666;
+}
+.btn-container {
+    text-align: center;
+    margin-top: 30px;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+    /* Style for the parent div */
+.dropdown-container {
+    margin-bottom: 20px; /* Add margin bottom for spacing */
+    padding: 10px; /* Add padding for spacing inside the div */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+}
+
+/* Style for the select elements */
+.selectHomepage {
+    width: 100%; /* Set the width to fill the container */
+    padding: 8px; /* Add padding for spacing inside the select */
+    margin-bottom: 10px; /* Add margin bottom for spacing between selects */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+    border: 1px solid #ccc; /* Add border for visual appearance */
+}
+.center-top-container {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 50%; /* Adjust as needed */
+    left: 0;
+    right: 0;
+}
+
+.container3D {
+    margin-top: 30px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transform: translateX(-1850px); /* Adjust as needed */
+    transition: transform 0.5s ease;
+}
+
+.container3D p {
+    margin: 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+}
+
+.container3D:hover {
+    transform: translateX(0);
+}
+
+/* CSS for styling the table */
+table {
+    border-collapse: collapse;
+    width: 50%; /* Adjust the width as needed */
+    margin: auto; /* Center the table horizontally */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Add shadow effect */
+    border-radius: 8px; /* Rounded corners */
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Add border */
+}
+th {
+    background-color: #f2f2f2; /* Header background color */
+}
+tr:hover {
+    background-color: #f5f5f5; /* Hover background color */
+}
+
+/* CSS for styling the logout button */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f9f9f9;
+    box-shadow: 0 -4px 8px 0 rgba(0,0,0,0.2); /* Add shadow effect */
+    padding: 20px;
+    text-align: center;
+}
+.logout-btn {
+    background-color: black; /* Red color for logout button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.logout-btn:hover {
+    background-color: black; /* Darker red color on hover */
+}

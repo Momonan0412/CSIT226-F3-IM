@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Mar 16, 2024 at 05:15 AM
+-- Generation Time: Apr 12, 2024 at 12:04 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -24,6 +24,49 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblcustomer`
+--
+
+CREATE TABLE `tblcustomer` (
+  `customerID` int(11) NOT NULL,
+  `accountID` int(11) NOT NULL,
+  `profileID` int(11) NOT NULL,
+  `room_assigned` varchar(255) NOT NULL DEFAULT 'No Room Assigned',
+  `payment` varchar(255) NOT NULL DEFAULT 'Payment Not Set'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblcustomer`
+--
+
+INSERT INTO `tblcustomer` (`customerID`, `accountID`, `profileID`, `room_assigned`, `payment`) VALUES
+(16, 27, 29, 'No Room Assigned', 'Mode of Payment: credit_card'),
+(17, 26, 28, 'No Room Assigned', 'Mode of Payment: debit_card');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblroomrequest`
+--
+
+CREATE TABLE `tblroomrequest` (
+  `requestID` int(11) NOT NULL,
+  `customerID` int(11) NOT NULL,
+  `request` varchar(255) NOT NULL,
+  `isApprove` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblroomrequest`
+--
+
+INSERT INTO `tblroomrequest` (`requestID`, `customerID`, `request`, `isApprove`) VALUES
+(10, 16, 'Room Type: single, Number of Beds: 1, Quality: standard, Capacity: 1 Person(s), Number of Bathrooms: 1,    Pay for Meal: included, Room Size: large', 0),
+(11, 17, 'Room Type: double, Number of Beds: 2, Quality: standard, Capacity: 3 Person(s), Number of Bathrooms: 2,    Pay for Meal: not_included, Room Size: small', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbluseraccount`
 --
 
@@ -40,8 +83,8 @@ CREATE TABLE `tbluseraccount` (
 --
 
 INSERT INTO `tbluseraccount` (`acctid`, `emailadd`, `username`, `password`, `usertype`) VALUES
-(24, 'avrilnigelc@gmail.com', 'Momonan0412', '$2y$10$d5tJfP3mPg3uuVh78XRKhun5Ejjg2E2eaR2uPQ3dJ9EdVOWoyrk9i', ''),
-(25, 'chua.avril_nigel@yahoo.com', 'asd', '$2y$10$7fCbONRN703jRRVPk.urr.oxTPpS4kAQ2iRma3jssYJC.Hj0StC6i', '');
+(26, 'chua.avril_nigel@yahoo.com', 'Momonan0412', '$2y$10$PUtq2AFOjyJHjMWEj7R0vuDXS2t3wJObKklLZu3P4PZ0QKUkNJZIa', ''),
+(27, 'tester@test.test', 'asd', '$2y$10$/b5YkFwR1tnF83b6NjCbAeUSOg7NPk4bH66dKSaVs6aH3HnvQt26O', '');
 
 -- --------------------------------------------------------
 
@@ -51,6 +94,7 @@ INSERT INTO `tbluseraccount` (`acctid`, `emailadd`, `username`, `password`, `use
 
 CREATE TABLE `tbluserprofile` (
   `userid` int(11) NOT NULL,
+  `acctid` int(11) NOT NULL,
   `firstname` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
   `gender` varchar(50) NOT NULL
@@ -60,13 +104,28 @@ CREATE TABLE `tbluserprofile` (
 -- Dumping data for table `tbluserprofile`
 --
 
-INSERT INTO `tbluserprofile` (`userid`, `firstname`, `lastname`, `gender`) VALUES
-(26, 'Avril Nigel', 'Chua', 'Male'),
-(27, 'asd', 'asd', 'Male');
+INSERT INTO `tbluserprofile` (`userid`, `acctid`, `firstname`, `lastname`, `gender`) VALUES
+(28, 26, 'Avril Nigel', 'Chua', 'Male'),
+(29, 27, 'asd', 'asd', 'Male');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `tblcustomer`
+--
+ALTER TABLE `tblcustomer`
+  ADD PRIMARY KEY (`customerID`),
+  ADD KEY `fk_customer_account_user` (`accountID`),
+  ADD KEY `fk_customer_profile_user` (`profileID`);
+
+--
+-- Indexes for table `tblroomrequest`
+--
+ALTER TABLE `tblroomrequest`
+  ADD PRIMARY KEY (`requestID`),
+  ADD KEY `fk_customer_room_request` (`customerID`);
 
 --
 -- Indexes for table `tbluseraccount`
@@ -78,23 +137,59 @@ ALTER TABLE `tbluseraccount`
 -- Indexes for table `tbluserprofile`
 --
 ALTER TABLE `tbluserprofile`
-  ADD PRIMARY KEY (`userid`);
+  ADD PRIMARY KEY (`userid`),
+  ADD KEY `fk_profile_account_id` (`acctid`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `tblcustomer`
+--
+ALTER TABLE `tblcustomer`
+  MODIFY `customerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `tblroomrequest`
+--
+ALTER TABLE `tblroomrequest`
+  MODIFY `requestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `tbluseraccount`
 --
 ALTER TABLE `tbluseraccount`
-  MODIFY `acctid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `acctid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `tbluserprofile`
 --
 ALTER TABLE `tbluserprofile`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tblcustomer`
+--
+ALTER TABLE `tblcustomer`
+  ADD CONSTRAINT `fk_customer_account_user` FOREIGN KEY (`accountID`) REFERENCES `tbluseraccount` (`acctid`),
+  ADD CONSTRAINT `fk_customer_profile_user` FOREIGN KEY (`profileID`) REFERENCES `tbluserprofile` (`userid`);
+
+--
+-- Constraints for table `tblroomrequest`
+--
+ALTER TABLE `tblroomrequest`
+  ADD CONSTRAINT `fk_customer_room_request` FOREIGN KEY (`customerID`) REFERENCES `tblcustomer` (`customerID`);
+
+--
+-- Constraints for table `tbluserprofile`
+--
+ALTER TABLE `tbluserprofile`
+  ADD CONSTRAINT `fk_profile_account_id` FOREIGN KEY (`acctid`) REFERENCES `tbluseraccount` (`acctid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
