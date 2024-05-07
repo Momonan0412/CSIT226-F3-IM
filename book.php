@@ -19,10 +19,10 @@
 ?>
 <body>
     <div class="center-container">
-        <div class="container3D">
+        <div class="">
             <p> <b> <?php echo $_SESSION["ExistingUserAccountUsername"]?> </b> have successfully logged in.</p>
             <p>  Account Identification <b> <?php echo $_SESSION["ExistingUserAccountID"]?> </b> </p>
-            <p> Check your Information here <a href="request.php">Information</a></p> 
+            <p> Check your Information <a href="request.php">here</a></p> 
         </div>
     </div>
     <div class="container">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Apr 12, 2024 at 12:04 PM
+-- Generation Time: May 07, 2024 at 10:22 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -40,8 +40,8 @@ CREATE TABLE `tblcustomer` (
 --
 
 INSERT INTO `tblcustomer` (`customerID`, `accountID`, `profileID`, `room_assigned`, `payment`) VALUES
-(16, 27, 29, 'No Room Assigned', 'Mode of Payment: credit_card'),
-(17, 26, 28, 'No Room Assigned', 'Mode of Payment: debit_card');
+(18, 26, 28, 'No Room Assigned', 'Mode of Payment: paypal'),
+(38, 27, 29, 'No Room Assigned', 'Mode of Payment: credit_card');
 
 -- --------------------------------------------------------
 
@@ -61,8 +61,8 @@ CREATE TABLE `tblroomrequest` (
 --
 
 INSERT INTO `tblroomrequest` (`requestID`, `customerID`, `request`, `isApprove`) VALUES
-(10, 16, 'Room Type: single, Number of Beds: 1, Quality: standard, Capacity: 1 Person(s), Number of Bathrooms: 1,    Pay for Meal: included, Room Size: large', 0),
-(11, 17, 'Room Type: double, Number of Beds: 2, Quality: standard, Capacity: 3 Person(s), Number of Bathrooms: 2,    Pay for Meal: not_included, Room Size: small', 0);
+(12, 18, 'Room Type: double, Number of Beds: 3, Quality: vip, Capacity: 3 Person(s), Number of Bathrooms: 3,    Pay for Meal: not_included, Room Size: small', 0),
+(32, 38, 'Room Type: single, Number of Beds: 1, Quality: standard, Capacity: 1 Person(s), Number of Bathrooms: 1,    Pay for Meal: included, Room Size: large', 0);
 
 -- --------------------------------------------------------
 
@@ -148,13 +148,13 @@ ALTER TABLE `tbluserprofile`
 -- AUTO_INCREMENT for table `tblcustomer`
 --
 ALTER TABLE `tblcustomer`
-  MODIFY `customerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `customerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tblroomrequest`
 --
 ALTER TABLE `tblroomrequest`
-  MODIFY `requestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `requestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `tbluseraccount`
@@ -183,7 +183,7 @@ ALTER TABLE `tblcustomer`
 -- Constraints for table `tblroomrequest`
 --
 ALTER TABLE `tblroomrequest`
-  ADD CONSTRAINT `fk_customer_room_request` FOREIGN KEY (`customerID`) REFERENCES `tblcustomer` (`customerID`);
+  ADD CONSTRAINT `fk_customer_room_request` FOREIGN KEY (`customerID`) REFERENCES `tblcustomer` (`customerID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tbluserprofile`
