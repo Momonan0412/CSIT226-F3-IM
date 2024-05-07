@@ -1,7 +1,7 @@
 <?php
     include 'connect.php';
     include 'header.php';
-    function displaySweetAlert1($icon, $title, $message) {
+    function displaySweetAlert1($icon, $title, $message, $user) {
         echo "<script>
                 console.log('$title');
                 Swal.fire({
@@ -9,9 +9,11 @@
                     title: '$title',
                     text: '$message',
                 }).then((result) => {
-                    if ('$title' === 'Login Successful!') {
+                    if ('$title' === 'Login Successful!' && '$user' !== 'Admin') {
                         console.log('Redirecting to login page');
                         window.location.href = 'book.php';
+                    } else {
+                        window.location.href = 'admin.php';
                     }
                 });
             </script>";
@@ -99,20 +101,20 @@ if(isset($_POST['submit'])){
                     console.log('inside password_verify');
                     </script>";
                     // Password is correct, login successful
-                    displaySweetAlert1("success", "Login Successful!", "Welcome!");
+                    displaySweetAlert1("success", "Login Successful!", "Welcome!", $_SESSION["ExistingUserAccountUsername"]);
                 } else {
                     // Password is incorrect
-                    displaySweetAlert1("warning", "Input Error", "Incorrect username or password!");
+                    displaySweetAlert1("warning", "Input Error", "Incorrect username or password!", $_SESSION["ExistingUserAccountUsername"]);
                 }
             } catch (Exception $e) {
                 throw new Exception("Error verifying password: " . $e->getMessage());
             }
         } else {
-            displaySweetAlert1("warning", "Input Error", "Type Og Tarung Chuy!");
+            displaySweetAlert1("warning", "Input Error", "Type Og Tarung Chuy!", $_SESSION["ExistingUserAccountUsername"]);
         }
     } catch (Exception $e) {
         // Handle exception
-        displaySweetAlert1("error", "Error", $e->getMessage());
+        displaySweetAlert1("error", "Error", $e->getMessage(), $_SESSION["ExistingUserAccountUsername"]);
     }
 }
 ?>

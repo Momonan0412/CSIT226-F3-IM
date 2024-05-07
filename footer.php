@@ -1,5 +1,5 @@
 <body>
-    <div class="footer">
+    <div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
     <script>
