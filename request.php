@@ -1,6 +1,7 @@
 <?php
     include 'header.php';
-    include 'connect.php';    
+    include 'connect.php'; 
+    include 'database.queries.php';   
     if (!isset($_COOKIE['user_id']) && !isset($_COOKIE['username'])) {
         header("Location: login.php?please_login_or_create_account");
     }
@@ -23,29 +24,13 @@
     <div class="center-container">
             <div class="">
                 <p> <b> <?php echo $_SESSION["ExistingUserAccountUsername"]?> </b> have successfully logged in.</p>
-                <p>  Account Identification <b> <?php echo $_SESSION["ExistingUserAccountID"]?> </b> </p>
                 <p> <a href="book.php">Go Back!</a></p> 
             </div>
         </div>
     <?php
-    // $_SESSION["ExistingUserAccountID"] and $_SESSION["newlyRegisteredCustomerID"]
-    $sql = "SELECT *
-        FROM tbluseraccount
-        JOIN tbluserprofile ON tbluseraccount.acctid = tbluserprofile.acctid
-        JOIN tblcustomer ON tbluseraccount.acctid = tblcustomer.accountID
-        JOIN tblroomrequest ON tblcustomer.customerID = tblroomrequest.customerID
-        WHERE tbluseraccount.acctid = ? OR tblcustomer.customerID = ?";
-    $stmt = $mysqli->prepare($sql);
-    if(!$stmt) {
-        throw new Exception("Error preparing SQL statement: " . $mysqli->error);
-    }
-    // Bind parameters
-    $stmt->bind_param("ii", $_SESSION["ExistingUserAccountID"], $_SESSION["newlyRegisteredCustomerID"]);
-
-    if(!$stmt->execute()) {
-        throw new Exception("Error executing SQL statement: " . $stmt->error);
-    }
-    $result = $stmt->get_result();
+    $isActive = 1;
+    $isCurrentRequest = 1;
+    $result = getUserData($mysqli, $_SESSION["ExistingUserAccountID"], $isActive, $isCurrentRequest);
     if($result->num_rows == 1){
         $row = $result->fetch_assoc();
         ?>
@@ -107,21 +92,12 @@
         </table>
         <?php
     }
-    $stmt->close();
 ?>
 <?php
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $query = "DELETE FROM `dbchuaf3`.`tblcustomer` WHERE `tblcustomer`.`accountID` = ?";
-        $stmt = $mysqli->prepare($query);
-        if(!$stmt) {
-            throw new Exception("Error preparing SQL statement: " . $mysqli->error);
-        }
-        $stmt->bind_param("i", $_SESSION["ExistingUserAccountID"]);
-        if(!$stmt->execute()) {
-            throw new Exception("Error executing SQL statement: " . $stmt->error);
-        }
-        displaySweetAlert("Success", "Request Deleted!", "Go back and make another request!");
-        $stmt->close();
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $updateCol = 0;
+        updateRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $updateCol);
+        displaySweetAlert("success", "Request Deleted!", "Go back and make another request!");
     }
-    ?>
-    <?php include "footer.php" ?>
+?>
+<?php include "footer.php" ?>

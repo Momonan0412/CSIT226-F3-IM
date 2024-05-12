@@ -1,7 +1,7 @@
 <?php   
     include 'header.php';
     include 'connect.php';
-    
+    include 'database.queries.php';
     if (!isset($_COOKIE['user_id']) && !isset($_COOKIE['username'])) {
         header("Location: login.php?please_login_or_create_account");
     }
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="container">
-    <form action="" method="post">
+    <form id="submitForm" action="" method="POST">
         
             <label for="payment">Room Preference:</label>
             <div  class="dropdown-container">
@@ -94,27 +94,6 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $sqlOne = "SELECT (accountID) FROM tblcustomer WHERE accountID = ? "; // ? is the acctid
-    $stmt = $mysqli->prepare($sqlOne);
-    
-    echo "<script>console.log('debugging 1....')</script>";
-    if(!$stmt) {
-        throw new Exception("Error preparing SQL statement: " . $mysqli->error);
-    }
-    echo "<script>console.log('debugging 2....')</script>";
-    $stmt->bind_param("i", $_SESSION["ExistingUserAccountID"]);
-    if(!$stmt->execute()) {
-        throw new Exception("Error executing SQL statement: " . $stmt->error);
-    }
-    
-    echo "<script>console.log('debugging 3....')</script>";
-    $result = $stmt->get_result();
-    if($result->num_rows == 1){
-        echo "<script>console.log('debugging 4....')</script>";
-        displaySweetAlert("error", "Request Already Submitted", "You have already submitted a request. Please wait for it to be approved before submitting another one.");
-        $stmt->close();  
-        return;
-    }
     // Retrieve selected choices from the form
     $room_type = $_POST['room_type'];
     $beds = $_POST['beds'];
@@ -127,56 +106,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Concatenate selected choices into a single string with spaces
     $request = "Room Type: $room_type, Number of Beds: $beds, Quality: $quality, Capacity: $capacity Person(s), Number of Bathrooms: $bathrooms,    Pay for Meal: $meal, Room Size: $room_size";
     $payment = "Mode of Payment: $payment";
-    
-    // Echo the concatenated string for testing
-    // echo $request;
-    // echo $payment;
-    
-    // Get the foreign keys of table account and profile
-    $sqlOne = "SELECT (userid) FROM tbluserprofile WHERE acctid = ? "; // ? is the acctid
-    $stmtOne = $mysqli->prepare($sqlOne);
-    if(!$stmtOne) {
-        throw new Exception("Error preparing SQL statement: " . $mysqli->error);
-    }
-    $stmtOne->bind_param("i", $_SESSION["ExistingUserAccountID"]);
-    if(!$stmtOne->execute()) {
-        throw new Exception("Error executing SQL statement: " . $stmtOne->error);
-    }
-    $result = $stmtOne->get_result();
+
+    $userStatus = 1; 
+    $result = getUserCustomerStatus($mysqli, $_SESSION["ExistingUserAccountID"], $userStatus);
     if($result->num_rows == 1){
         $row = $result->fetch_assoc();
-        $userid = $row['userid'];
-        $_SESSION["ExistingUserProfileID"] = $userid;
-        // echo $userid;
+        $_SESSION["newlyRegisteredCustomerID"] = $row['customerID'];
+        $result = getUserRoomRequestStatus($mysqli, $_SESSION["newlyRegisteredCustomerID"], $userStatus);
+            if($result->num_rows == 1){
+                echo "<script>console.log('debugging 4....')</script>";
+                displaySweetAlert("error", "Request Already Submitted", "You have already submitted a request. Please wait for it to be approved before submitting another one.");
+                return;
+            }else{
+                echo '<script>console.log("Debug: CREATING THE REQUEST! ANYTHING PARA NIYA UWU!");</script>';
+            }
+    } else {
+        echo '<script>showConfirmation();</script>';
+        echo '<script>console.log("Debug: 1... 2....3....!");</script>';
+        // TODO: CREATE CUSTOMER AND ADD PAYMENT METHOD!
+        try{
+            userProfileIdentificationGetter($mysqli, $_SESSION["ExistingUserAccountID"]);
+            insertCustomer($mysqli, $payment, $_SESSION["ExistingUserProfileID"], $_SESSION["ExistingUserAccountID"]);
+            // insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
-    $stmtOne->close();  
-    // Insert Data
-    $sqlTwo = "INSERT INTO tblcustomer (accountID, profileID, payment) VALUES (?, ?, ?)";
-    $stmtTwo = $mysqli->prepare($sqlTwo);
-    if(!$stmtTwo) {
-        throw new Exception("Error preparing SQL statement: " . $mysqli->error);
+    echo '<script>showConfirmation();</script>';
+    echo '<script>console.log("Debug: 4... 5....6....!");</script>';
+    // TODO: CREATE TBLREQUEST BASE SA CUSTOMER!
+    try {
+        insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
+        echo "Room request inserted successfully!";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
-    $stmtTwo->bind_param("iis", $_SESSION["ExistingUserAccountID"], $_SESSION["ExistingUserProfileID"], $payment);
-    if(!$stmtTwo->execute()) {
-        throw new Exception("Error executing SQL statement: " . $stmtTwo->error);
-    }
-    //GET THE tblCustomer's PRIMARY KEY HERE
-    $_SESSION["newlyRegisteredCustomerID"]= $mysqli->insert_id;
-    $stmtTwo->close();
-    
-    
-    $sqlThree = "INSERT INTO tblroomrequest (customerID, request) VALUES (?, ?)";
-    $stmtThree = $mysqli->prepare($sqlThree);
-    if(!$stmtThree) {
-        throw new Exception("Error preparing SQL statement: " . $mysqli->error);
-    }
-    $stmtThree->bind_param("is", $_SESSION["newlyRegisteredCustomerID"], $request);
-    if(!$stmtThree->execute()) {
-        throw new Exception("Error executing SQL statement: " . $stmtThree->error);
-    }
-    $stmtThree->close();
-    
 }
 ?>
 
 <?php include "footer.php" ?>
+
+<script>
+var roomType = document.getElementById("room_type").value;
+var beds = document.getElementById("beds").value;
+var quality = document.getElementById("quality").value;
+var capacity = document.getElementById("capacity").value;
+var bathrooms = document.getElementById("bathrooms").value;
+var meal = document.getElementById("meal").value;
+var roomSize = document.getElementById("room_size").value;
+var payment = document.getElementById("payment").value;
+    document.querySelector('input[type="submit"]').addEventListener('click', function(event){
+        event.preventDefault();
+        showConfirmation().then((result) => { 
+            if (result === false) {
+                // If the user cancels, do nothing
+                console.log("User canceled");
+            } else {
+                // If the user confirms, submit the form
+                document.getElementById("submitForm").submit();
+            }
+        });
+    });
+</script>

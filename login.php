@@ -13,7 +13,7 @@
                         console.log('Redirecting to login page');
                         window.location.href = 'book.php';
                     } else {
-                        window.location.href = 'admin.php';
+                        window.location.href = 'active_request.php';
                     }
                 });
             </script>";
