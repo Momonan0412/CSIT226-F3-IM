@@ -44,6 +44,11 @@
                 <button type="submit">VIEW ACTIVE ALL USERS</button>
             </form>
         </th>
+        <th>
+            <form action="charts.php" method="GET">
+                <button type="submit">CHARTS</button>
+            </form>
+        </th>
         </tr>
     </table>
     <?php

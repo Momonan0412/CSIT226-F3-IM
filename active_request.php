@@ -34,11 +34,6 @@
                 <button type="submit">GO TO INACTIVE REQUEST</button>
             </form>
         </th>
-        <!-- <th>
-            <form action="active_request.php" method="GET">
-                <button type="submit">GO TO ACTIVE REQUEST</button>
-            </form>
-        </th> -->
         <th>
             <form action="view_inactive_users.php" method="GET">
                 <button type="submit">VIEW INACTIVE ALL USERS</button>
@@ -47,6 +42,11 @@
         <th>
             <form action="view_active_users.php" method="GET">
                 <button type="submit">VIEW ACTIVE ALL USERS</button>
+            </form>
+        </th>
+        <th>
+            <form action="charts.php" method="GET">
+                <button type="submit">CHARTS</button>
             </form>
         </th>
         </tr>

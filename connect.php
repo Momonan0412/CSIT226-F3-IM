@@ -50,6 +50,7 @@ try{
         `profileID` int(11) NOT NULL,
         `room_assigned` varchar(255) NOT NULL DEFAULT 'No Room Assigned',
         `payment` varchar(255) NOT NULL DEFAULT 'Payment Not Set',
+        `isActive` tinyint(1) NOT NULL DEFAULT 1,
         PRIMARY KEY (`customerID`),
         FOREIGN KEY (`profileID`) REFERENCES `dbchuaf3`.`tbluserprofile`(`userid`) ON DELETE RESTRICT,
         FOREIGN KEY (`accountID`) REFERENCES `dbchuaf3`.`tbluseraccount`(`acctid`) ON DELETE RESTRICT
@@ -61,6 +62,7 @@ try{
         `customerID` int(11) NOT NULL,
         `request` varchar(255) NOT NULL,
         `isApprove` tinyint(1) NOT NULL DEFAULT 0,
+        `isCurrentRequest` tinyint(1) NOT NULL DEFAULT 1,
         PRIMARY KEY (`requestID`),
         FOREIGN KEY (`customerID`) REFERENCES `dbchuaf3`.`tblcustomer`(`customerID`) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
