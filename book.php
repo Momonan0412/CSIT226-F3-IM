@@ -135,13 +135,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo '<script>showConfirmation();</script>';
     echo '<script>console.log("Debug: 4... 5....6....!");</script>';
     // TODO: CREATE TBLREQUEST BASE SA CUSTOMER!
-    try {
-        insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
-        echo "Room request inserted successfully!";
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+    if(isset($_SESSION["newlyRegisteredCustomerID"])){
+        try {
+                insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
+                echo "Room request inserted successfully!";
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            }
+        }
     }
-}
 ?>
 
 <?php include "footer.php" ?>
