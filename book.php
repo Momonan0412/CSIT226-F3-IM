@@ -96,15 +96,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Retrieve selected choices from the form
     $room_type = $_POST['room_type'];
-    $beds = $_POST['beds'];
+    $bed = $_POST['beds'];
     $quality = $_POST['quality'];
     $capacity = $_POST['capacity'];
-    $bathrooms = $_POST['bathrooms'];
+    $bathroom = $_POST['bathrooms'];
     $meal = $_POST['meal'];
     $room_size = $_POST['room_size'];
     $payment = $_POST['payment'];   
     // Concatenate selected choices into a single string with spaces
-    $request = "Room Type: $room_type, Number of Beds: $beds, Quality: $quality, Capacity: $capacity Person(s), Number of Bathrooms: $bathrooms,    Pay for Meal: $meal, Room Size: $room_size";
+    // $request = "Room Type: $room_type, Number of Beds: $beds, Quality: $quality, Capacity: $capacity Person(s), Number of Bathrooms: $bathrooms,    Pay for Meal: $meal, Room Size: $room_size";
     $payment = "Mode of Payment: $payment";
 
     $userStatus = 1; 
@@ -127,17 +127,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try{
             userProfileIdentificationGetter($mysqli, $_SESSION["ExistingUserAccountID"]);
             insertCustomer($mysqli, $payment, $_SESSION["ExistingUserProfileID"], $_SESSION["ExistingUserAccountID"]);
-            // insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
     }
     echo '<script>showConfirmation();</script>';
     echo '<script>console.log("Debug: 4... 5....6....!");</script>';
-    // TODO: CREATE TBLREQUEST BASE SA CUSTOMER!
     if(isset($_SESSION["newlyRegisteredCustomerID"])){
         try {
-                insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $request);
+                $requestID = insertRequest($mysqli, $room_type, $bed, $quality, $capacity, $bathroom, $meal, $room_size);
+                insertRoomRequest($mysqli, $_SESSION["newlyRegisteredCustomerID"], $requestID);
                 echo "Room request inserted successfully!";
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();

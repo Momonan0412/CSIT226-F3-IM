@@ -56,18 +56,29 @@ try{
         FOREIGN KEY (`accountID`) REFERENCES `dbchuaf3`.`tbluseraccount`(`acctid`) ON DELETE RESTRICT
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
     $mysqli->query($createOne);
-    
-    $createTwo = "CREATE TABLE IF NOT EXISTS `dbchuaf3`.`tblroomrequest` (
+    $createFive = "CREATE TABLE IF NOT EXISTS `dbchuaf3`.`tblrequest` (
         `requestID` int(11) NOT NULL AUTO_INCREMENT,
+        `room_type` varchar(255),
+        `bed` varchar(255),
+        `quality` varchar(255),
+        `capacity` varchar(255),
+        `bathroom` varchar(255),
+        `meal` varchar(255),
+        `room_size` varchar(255),
+        PRIMARY KEY (`requestID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+    $mysqli->query($createFive);
+    $createTwo = "CREATE TABLE IF NOT EXISTS `dbchuaf3`.`tblroomrequest` (
+        `roomrequestID` int(11) NOT NULL AUTO_INCREMENT,
         `customerID` int(11) NOT NULL,
-        `request` varchar(255) NOT NULL,
+        `requestID` int(11) NOT NULL,
         `isApprove` tinyint(1) NOT NULL DEFAULT 0,
         `isCurrentRequest` tinyint(1) NOT NULL DEFAULT 1,
-        PRIMARY KEY (`requestID`),
-        FOREIGN KEY (`customerID`) REFERENCES `dbchuaf3`.`tblcustomer`(`customerID`) ON DELETE CASCADE
+        PRIMARY KEY (`roomrequestID`),
+        FOREIGN KEY (`customerID`) REFERENCES `dbchuaf3`.`tblcustomer`(`customerID`) ON DELETE CASCADE,
+        FOREIGN KEY (`requestID`) REFERENCES `dbchuaf3`.`tblrequest`(`requestID`) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
     $mysqli->query($createTwo);
-    
 
 }catch(Exception $e){
     echo "An error occurred: " . $e->getMessage();

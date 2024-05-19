@@ -46,7 +46,7 @@
             </tr>
             <tr>
                 <th>Request</th>
-                <td><?php echo $row['request']; ?></td>
+                <td><?php echo "A {$row['room_type']} with {$row['bed']} bed(s), {$row['quality']} quality, {$row['capacity']} capacity, {$row['bathroom']} bathroom(s), {$row['meal']} meal plan, and room size {$row['room_size']}"; ?></td>
             </tr>
             <tr>
                 <th>Is Approved</th>
