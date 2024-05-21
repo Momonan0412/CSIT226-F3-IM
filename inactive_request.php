@@ -53,14 +53,33 @@
     </table>
     <?php
     // $_SESSION["ExistingUserAccountID"] and $_SESSION["newlyRegisteredCustomerID"]
-    $sql = "SELECT tbluseraccount.username, tbluserprofile.firstname, tbluserprofile.lastname, 
-            tbluserprofile.gender, tblcustomer.payment, tblroomrequest.request, tbluseraccount.emailadd,
-            tblcustomer.room_assigned, tblroomrequest.isApprove, tblcustomer.customerID, tblroomrequest.requestID
-            FROM tbluseraccount
-            JOIN tbluserprofile ON tbluseraccount.acctid = tbluserprofile.acctid
-            LEFT JOIN tblcustomer ON tbluseraccount.acctid = tblcustomer.accountID
-            LEFT JOIN tblroomrequest ON tblcustomer.customerID = tblroomrequest.customerID
-            WHERE tblroomrequest.isCurrentRequest = ?;";
+    $sql = "SELECT 
+    ua.username, 
+    up.firstname, 
+    up.lastname, 
+    up.gender, 
+    c.payment, 
+    r.room_type, 
+    r.bed,
+    r.quality, 
+    r.capacity, 
+    r.bathroom, 
+    r.meal, 
+    r.room_size,
+    ua.emailadd, 
+    c.room_assigned, 
+    rr.isApprove
+FROM 
+    tbluseraccount AS ua
+JOIN 
+    tbluserprofile AS up ON ua.acctid = up.acctid
+LEFT JOIN 
+    tblcustomer AS c ON ua.acctid = c.accountID
+LEFT JOIN 
+    tblroomrequest AS rr ON c.customerID = rr.customerID
+LEFT JOIN 
+    tblrequest AS r ON rr.requestID = r.requestID
+WHERE rr.isCurrentRequest = ?";
     $stmt = $mysqli->prepare($sql);
     if(!$stmt) {
         throw new Exception("Error preparing SQL statement: " . $mysqli->error);
@@ -86,7 +105,7 @@
             </tr>
             <tr>
                 <th>Request</th>
-                <td><?php echo $row['request']; ?></td>
+                <td><?php echo "A {$row['room_type']} with {$row['bed']} bed(s), {$row['quality']} quality, {$row['capacity']} capacity, {$row['bathroom']} bathroom(s), {$row['meal']} meal plan, and room size {$row['room_size']}"; ?></td>
             </tr>
             <tr>
                 <th>Is Approved</th>
